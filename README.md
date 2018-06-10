@@ -1,6 +1,17 @@
 # basic_web01
 采用Spring5+SpringMVC5+Mybatis3+Shiro搭建的一套web基本架构，提供标准的RestFul API接口，可以很方便的进行二次开发！
 
+>## 技术特色
+
+<ul>
+  <li>Spring5</li>
+  <li>SpringMVC5</li>
+  <li>Mybatis3</li>
+  <li>Shiro</li>
+  <li>Spring Session</li>
+  <li>Druid</li>
+</ul>
+
 >## 服务器端通用响应类封装
 
 测试URL地址
