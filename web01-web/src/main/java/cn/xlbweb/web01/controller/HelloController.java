@@ -18,4 +18,10 @@ public class HelloController {
     public ServerResponse abc() {
         return ServerResponse.success("abc");
     }
+
+    @GetMapping("/exception")
+    public ServerResponse exceptionTest() {
+        int a = 10 / 0;
+        return ServerResponse.success("abc");
+    }
 }
