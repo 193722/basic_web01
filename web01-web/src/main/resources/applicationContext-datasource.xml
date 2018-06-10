@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--todo 引入多个配置文件-->
+    <context:property-placeholder location="classpath:datasource.properties"/>
+
+    <!--Druid数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+        <!--连接池启动时的初始值-->
+        <property name="initialSize" value="${db.initialSize}"/>
+        <!--连接池的最大值-->
+        <property name="maxActive" value="${db.maxActive}"/>
+        <!-- 最小空闲值:当空闲的连接数少于阀值时,连接池就会预申请去一些连接，以免洪峰来时来不及申请 -->
+        <property name="minIdle" value="${db.minIdle}"/>
+        <!--最大建立连接等待时间:如果超过此时间将接到异常,设为－1表示无限制-->
+        <property name="maxWait" value="${db.maxWait}"/>
+        <!--数据源监控-->
+        <property name="filters" value="stat"/>
+    </bean>
+
+    <!--SqlSessionFactory配置-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="mapperLocations" value="classpath*:mappers/*.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+        <!--插件-->
+        <property name="plugins">
+            <bean class="com.github.pagehelper.PageInterceptor">
+                <property name="properties">
+                    <value>
+                        helperDialect=mysql
+                    </value>
+                </property>
+            </bean>
+        </property>
+        <!--Mybatis配置-->
+        <property name="configuration">
+            <bean class="org.apache.ibatis.session.Configuration">
+                <!--开启自动驼峰命名规则-->
+                <property name="mapUnderscoreToCamelCase">
+                    <value>true</value>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Mapper扫描-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.xlbweb.web01.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!--事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 开启事务控制的注解支持 -->
+    <tx:annotation-driven/>
+</beans>
