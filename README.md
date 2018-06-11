@@ -1,6 +1,24 @@
 # basic_web01
 采用Spring5+SpringMVC5+Mybatis3+Shiro搭建的一套web基本架构，提供标准的RestFul API接口，可以很方便的进行二次开发！
 
+>## 目录
+<ul>
+  <li>模块介绍</li>
+  <li><a href="https://github.com/bobi1234/basic_web01#%E6%8A%80%E6%9C%AF%E7%89%B9%E8%89%B2">技术特色</a></li>
+  <li>服务器端通用响应类封装</li>
+  <li>全局异常处理封装</li>
+</ul>
+
+>## 模块介绍
+<ul>
+  <li>web01-common: 公告模块</li>
+  <li>web01-mapper: 数据库访问层模块</li>
+  <li>web01-pojo: 实体类模块</li>
+  <li>web01-service: 业务处模块</li>
+  <li>web01-shiro: 权限模块</li>
+  <li>web01-web: 接口模块</li>
+</ul>
+
 >## 技术特色
 
 <ul>
