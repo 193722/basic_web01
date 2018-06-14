@@ -66,26 +66,40 @@
                 </plugin>-->
             </plugins>
         </pluginManagement>
+
+        <!--环境隔离配置-->
+        <resources>
+            <resource>
+                <directory>src/main/resources.${deploy.type}</directory>
+                <excludes>
+                    <exclude>*.jsp</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
 
-    <!--&lt;!&ndash;环境隔离配置&ndash;&gt;-->
-    <!--<profiles>-->
-        <!--&lt;!&ndash;开发环境&ndash;&gt;-->
-        <!--<profile>-->
-            <!--<id>dev</id>-->
-            <!--<activation>-->
-                <!--<activeByDefault>true</activeByDefault>-->
-            <!--</activation>-->
-            <!--<properties>-->
-                <!--<deploy.type>dev</deploy.type>-->
-            <!--</properties>-->
-        <!--</profile>-->
-        <!--&lt;!&ndash;生产环境&ndash;&gt;-->
-        <!--<profile>-->
-            <!--<id>prod</id>-->
-            <!--<properties>-->
-                <!--<deploy.type>prod</deploy.type>-->
-            <!--</properties>-->
-        <!--</profile>-->
-    <!--</profiles>-->
+    <!--环境隔离配置-->
+    <profiles>
+        <!--开发环境-->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <deploy.type>dev</deploy.type>
+            </properties>
+        </profile>
+
+        <!--生产环境-->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <deploy.type>prod</deploy.type>
+            </properties>
+        </profile>
+    </profiles>
 </project>
