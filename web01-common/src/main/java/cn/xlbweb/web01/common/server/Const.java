@@ -6,4 +6,7 @@ package cn.xlbweb.web01.common.server;
  * @description:
  */
 public class Const {
+
+    // 密码盐值
+    public static final String SALT = "abcdefghijklmnopqrstuvwxyz";
 }

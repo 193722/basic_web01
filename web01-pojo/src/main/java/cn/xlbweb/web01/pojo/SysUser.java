@@ -2,6 +2,8 @@ package cn.xlbweb.web01.pojo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author: Mr.X
  * @date: 2018/6/11 上午1:31
@@ -22,4 +24,9 @@ public class SysUser {
      * 密码
      */
     private String password;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
 }

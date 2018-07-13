@@ -16,4 +16,12 @@ public interface SysUserMapper {
      * @return
      */
     SysUser findOne(Integer id);
+
+    /**
+     * 根据用户名查询用户信息
+     *
+     * @param username
+     * @return
+     */
+    SysUser findByUsername(String username);
 }

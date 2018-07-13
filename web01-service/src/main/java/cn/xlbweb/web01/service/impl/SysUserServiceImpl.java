@@ -27,4 +27,9 @@ public class SysUserServiceImpl implements ISysUserService {
         }
         return ServerResponse.error("无数据");
     }
+
+    @Override
+    public SysUser findByUsername(String username) {
+        return sysUserMapper.findByUsername(username);
+    }
 }

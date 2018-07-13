@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!--Shiro Web过滤器-->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <!--身份认证失败跳转路径-->
+        <!--<property name="loginUrl" value="/login"/>-->
+        <!--todo 权限认证失败跳转路径(无效)-->
+        <!--<property name="unauthorizedUrl" value="/403"/>-->
+        <!--todo 如何控制并发登录人数:使用KickoutSessionControlFilter类,加在filters属性中配置-->
+        <property name="filterChainDefinitions">
+            <value>
+                <!--资源路径-->
+                /resources/** = anon
+                <!--验证码-->
+                /captcha = anon
+                <!--登录请求-->
+                /sys/user/login = anon
+                <!--登出请求-->
+                /logout = logout
+                <!--druid监控-->
+                /druid/* = authc, perms[druid]
+                <!--注意:查看我的订单或进行支付时,此时还是需要再进行身份认证的,以确保当前用户还是你-->
+                /pay = authc
+                <!--身份验证通过或通过RememberMe登录都可以进行访问-->
+                /** = user
+            </value>
+        </property>
+    </bean>
+
+    <!--安全管理器-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="web01Realm"/>
+        <property name="sessionManager" ref="sessionManager"/>
+        <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
+        <property name="cacheManager" ref="cacheManager"/>
+    </bean>
+
+    <!--自定义Realm-->
+    <bean id="web01Realm" class="cn.xlbweb.web01.shiro.Web01Realm">
+        <!--密码匹配-->
+        <property name="credentialsMatcher">
+            <!--todo 限制登录次数做法:继承HashedCredentialsMatcher,在匹配密码之前先比较登录次数,登录次数可放在数据库或缓存中,若大于规定登录次数限制则抛出ExcessiveAttemptsException异常-->
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <!--哈希算法名称-->
+                <property name="hashAlgorithmName" value="md5"/>
+                <!--散列的次数-->
+                <property name="hashIterations" value="2"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!--session管理-->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!--全局的session会话超时时间,此操作会覆盖web.xml文件中的超时时间配置,此处设置为60分钟,单位为毫秒,1秒(s)=1000毫秒(ms)-->
+        <property name="globalSessionTimeout" value="#{60 * 60 * 1000}"/>
+        <!--相隔多久检查一次session的有效性-->
+        <property name="sessionValidationInterval" value="1800000"/>
+        <!--去掉JSESSIONID小尾巴-->
+        <property name="sessionIdUrlRewritingEnabled" value="false"/>
+        <!--删除所有无效的Session对象,此时的session被保存在了内存里面-->
+        <property name="deleteInvalidSessions" value="true"/>
+        <!--会话Cookie模板-->
+        <property name="sessionIdCookie">
+            <bean class="org.apache.shiro.web.servlet.SimpleCookie">
+                <constructor-arg name="name" value="shiro.session"/>
+                <property name="path" value="/"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!--缓存Shiro授权信息-->
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"/>
+</beans>
