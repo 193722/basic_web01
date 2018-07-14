@@ -3,31 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-
     <!--Shiro Web过滤器-->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <!--身份认证失败跳转路径-->
-        <!--<property name="loginUrl" value="/login"/>-->
-        <!--todo 权限认证失败跳转路径(无效)-->
-        <!--<property name="unauthorizedUrl" value="/403"/>-->
-        <!--todo 如何控制并发登录人数:使用KickoutSessionControlFilter类,加在filters属性中配置-->
         <property name="filterChainDefinitions">
             <value>
-                <!--资源路径-->
+                <!--静态资源路径-->
                 /resources/** = anon
-                <!--验证码-->
-                /captcha = anon
                 <!--登录请求-->
                 /sys/user/login = anon
-                <!--登出请求-->
-                /logout = logout
+                <!--todo 登出请求(需要返回json数据,而不是跳转页面操作)-->
+                /sys/user/logout = logout
                 <!--druid监控-->
-                /druid/* = authc, perms[druid]
-                <!--注意:查看我的订单或进行支付时,此时还是需要再进行身份认证的,以确保当前用户还是你-->
-                /pay = authc
+                /druid/** = anon
                 <!--身份验证通过或通过RememberMe登录都可以进行访问-->
-                /** = user
+                /sys/** = user
+                /busi/** = user
+                <!--其他请求都不拦截-->
+                /** = anon
             </value>
         </property>
     </bean>
